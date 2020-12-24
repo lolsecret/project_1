@@ -1,6 +1,6 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import  GroupSpec
+from .models import GroupSpec
 
 
 @receiver(post_save, sender=GroupSpec)

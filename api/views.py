@@ -1,11 +1,10 @@
-from django.shortcuts import render
-from requests import Response
-from rest_framework import viewsets, permissions
+from rest_framework import permissions
 from rest_framework.generics import ListAPIView
 from univers.models import Univer, Chair
-from .seralizers import UniverSerializers, ChairSerializers, SpecializationSerializers
+from .seralizers import UniverSerializers, ChairSerializers
 from .permissions import IsRector, IsHeadOfDep
 from rest_condition import Or
+
 
 class UniverView(ListAPIView):
     queryset = Univer.objects.all()
@@ -13,9 +12,10 @@ class UniverView(ListAPIView):
     permission_classes = (Or(permissions.IsAdminUser, IsRector),)
 
     def filter_queryset(self, queryset):
-        if self.request.user.role == 'r':
+        if self.request.user.is_rector:
             queryset = queryset.filter(rector_id=self.request.user)
         return queryset
+
 
 class ChairView(ListAPIView):
     queryset = Chair.objects.all()
@@ -23,10 +23,8 @@ class ChairView(ListAPIView):
     permission_classes = (Or(IsRector, IsHeadOfDep),)
 
     def filter_queryset(self, queryset):
-        univer = Univer.objects.all()
-        univer = univer.filter(rector_id=self.request.user)
-        univer_id = [univer_id.id for univer_id in univer]
+        univer = UniverView.queryset.filter(rector_id=self.request.user)
 
-        if self.request.user.role == 'hod':
-            queryset = queryset.filter(head_of_dep_id=self.request.user)
-        return queryset.filter(univer_id = univer_id[0])
+        if self.request.user.is_hod:
+            return queryset.filter(head_of_dep_id=self.request.user)
+        return queryset.filter(univer_id = univer.first().id)

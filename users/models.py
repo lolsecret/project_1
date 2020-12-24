@@ -44,10 +44,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     chairs = models.ForeignKey('univers.Chair', on_delete=models.SET_NULL, null=True, blank=True,related_name='chairs')
     last_name = models.CharField(max_length=50,null = True)
     photo = models.ImageField(null=False, blank = False)
+
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    is_rector = models.BooleanField("rector", default=False)
+    is_hod = models.BooleanField("head of dep", default=False)
     USERNAME_FIELD = 'username'
-
     REQUIRED_FIELDS = ['last_name', 'first_name']
 
     @property

@@ -1,8 +1,7 @@
 from django.db import models
 from users.models import User
-from datetime import datetime
-from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
+
 
 class Univer(models.Model):
     name = models.CharField(max_length = 100, help_text = 'Univer name')
@@ -27,6 +26,7 @@ class Chair(models.Model):
     def get_absolute_url(self):
         return reverse('chair-detail', args=[str(self.id)])
 
+
 class Specialization(models.Model):
     chair = models.ForeignKey(Chair, on_delete=models.CASCADE, null=True, blank=True, related_name='specializations')
     name = models.CharField(max_length=10, help_text='Spec name')
@@ -37,6 +37,7 @@ class Specialization(models.Model):
 
     def get_absolute_url(self):
         return reverse('spec-detail', args=[str(self.id)])
+
 
 class GroupSpec(models.Model):
     name = models.CharField(max_length = 100,  help_text = 'Group name', blank=True, null=True)
