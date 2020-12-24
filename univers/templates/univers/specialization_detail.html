@@ -1,0 +1,25 @@
+{% extends "base_generic.html" %}
+{% block content %}
+    <h1><strong>{{ specialization.chair.univer.name}}</strong></h1>
+    <h2><strong>{{ specialization.chair.name }}:</strong> {{ specialization.name }}</h2>
+    {% if specialization.group_specs.all %}
+        <ul>
+            {% for group in specialization.group_specs.all %}
+                <h3><strong>Название группы: </strong>{{ group.name }}</h3>
+                <li>
+                    <strong>Начало обучения: </strong>{{ group.start_date }}
+                    <br>
+                     <strong>Количество студентов: </strong>{{ group.student.count }}
+
+                    <form action="{% url 'group-delete' group.pk %}" method="POST">{% csrf_token %}
+                        <a href="{% url 'group-detail' group.pk %}">Подробнее</a>
+                        <input type="submit" value="удалить">
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+          <p>There are no specializations in the "{{ chair.univer }}".</p>
+    {% endif %}
+    <a href="{% url 'spec-create' %}">Создать</a>
+{% endblock %}

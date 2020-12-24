@@ -1,0 +1,22 @@
+{% extends "base_generic.html" %}
+{% block content %}
+    <h1>{{ univer.name}}</h1>
+    <h2>Chair List:</h2>
+    {% if univer.univer_chairs %}
+        <ul>
+            {% for chair in univer.univer_chairs.all %}
+                <li>
+                    <strong>{{ chair.name }}</strong> | Заведующая кафедрой (Ф.И.О) -
+                    <strong>{{ chair.head_of_dep }}</strong>
+                    <a href="{% url 'chair-detail' chair.pk %}">Подробнее</a>
+                    <form action="{% url 'chair-delete' chair.pk %}" method="POST">{% csrf_token %}
+                        <input type="submit" value="удалить">
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+          <p>There are no univer in the site.</p>
+    {% endif %}
+    <a href="{% url 'chair-create' %}">Создать</a>
+{% endblock %}

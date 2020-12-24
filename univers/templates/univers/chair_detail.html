@@ -1,0 +1,26 @@
+{% extends "base_generic.html" %}
+{% block content %}
+    <h1><strong>{{ chair.univer }}:</strong> {{ chair.name }}</h1>
+    {% if chair.specializations.all %}
+        <ul>
+            {% for spec in chair.specializations.all %}
+                <h3><strong>Специализация: </strong>{{ spec.name }}</h3>
+                <li>
+                    <strong>Зав.кафедрой: </strong>{{ spec.chair.head_of_dep }}
+                    <br>
+                    {% for teach in spec.chair.teacher.all %}
+                    <strong>Преподаватель: </strong>{{ teach}}
+                    <br>
+                    {% endfor %}
+                    <form action="{% url 'spec-delete' spec.pk %}" method="POST">{% csrf_token %}
+                        <a href="{% url 'spec-detail' spec.pk %}">Подробнее</a>
+                        <input type="submit" value="удалить">
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+          <p>There are no specializations in the "{{ chair.univer }}".</p>
+    {% endif %}
+    <a href="{% url 'chair-create' %}">Создать</a>
+{% endblock %}

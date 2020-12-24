@@ -1,0 +1,22 @@
+{% extends "base_generic.html" %}
+{% block content %}
+    <h1><strong>{{ groupspec.spec.chair.name}}</strong></h1>
+    <h2><strong>{{ groupspec.spec.name }}:</strong> {{ groupspec.name }}</h2>
+    {% if groupspec.student.all %}
+        <ul>
+            {% for student in groupspec.student.all %}
+                <h3><strong>Фамилия студента: </strong>{{ student.last_name }}</h3>
+                <li>
+                    <strong>Имя студента: </strong>{{ student.first_name }}
+                    <br>
+                    <strong>Отчество студента: </strong>{{ student.middle_name }}
+                    <br>
+                    <strong>Фото студента: </strong><img src="{{ student.photo.url }}">
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+          <p>There are no students in the "{{ groupspec.name }}".</p>
+    {% endif %}
+    <a href="{% url 'group-create' %}">Создать</a>
+{% endblock %}

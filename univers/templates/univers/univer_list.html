@@ -1,0 +1,21 @@
+{% extends "base_generic.html" %}
+{% block content %}
+    <h1>Univer List:</h1>
+    {% if univer_list %}
+        <ul>
+            {% for univer in univer_list %}
+                <li>
+                    <strong>{{ univer.name }}</strong> -
+                    {{ univer.rector }}
+                    <a href="{% url 'univer-detail' univer.pk %}">Подробнее</a>
+                    <form action="{% url 'univer-delete' univer.pk %}" method="POST">{% csrf_token %}
+                        <input type="submit" value="удалить">
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+          <p>There are no univer in the site.</p>
+    {% endif %}
+    <a href="{% url 'univer-create' %}">Создать</a>
+{% endblock %}
