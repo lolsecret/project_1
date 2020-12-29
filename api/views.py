@@ -1,5 +1,5 @@
 from rest_framework import permissions
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView
 from univers.models import Univer, Chair
 from .seralizers import UniverSerializers, ChairSerializers
 from .permissions import IsRector, IsHeadOfDep
@@ -12,10 +12,12 @@ class UniverView(ListAPIView):
     permission_classes = (Or(permissions.IsAdminUser, IsRector),)
 
     def filter_queryset(self, queryset):
-        if self.request.user.is_rector:
+        if self.request.user.RoleTypes.RECTOR:
             queryset = queryset.filter(rector_id=self.request.user)
         return queryset
 
+
+from users.models import RoleTypes
 
 class ChairView(ListAPIView):
     queryset = Chair.objects.all()
@@ -23,8 +25,9 @@ class ChairView(ListAPIView):
     permission_classes = (Or(IsRector, IsHeadOfDep),)
 
     def filter_queryset(self, queryset):
-        univer = UniverView.queryset.filter(rector_id=self.request.user)
+        user = self.request.user
 
-        if self.request.user.is_hod:
+        if user.role == RoleTypes.RECTOR:
+            return self.queryset.filter(univer=user.univer)
+        elif user.role == RoleTypes.HEAD_OF_DEP:
             return queryset.filter(head_of_dep_id=self.request.user)
-        return queryset.filter(univer_id = univer.first().id)

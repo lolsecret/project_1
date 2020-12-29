@@ -5,7 +5,7 @@ from django.urls import reverse
 
 class Univer(models.Model):
     name = models.CharField(max_length = 100, help_text = 'Univer name')
-    rector = models.OneToOneField(User, on_delete=models.CASCADE, null = True )
+    rector = models.OneToOneField(User, on_delete=models.CASCADE, null=True, related_name="univer")
 
     def __str__(self):
         return self.name
@@ -18,7 +18,7 @@ class Chair(models.Model):
     name = models.CharField(max_length = 100, help_text = 'Chair name')
     univer = models.ForeignKey(Univer, on_delete=models.CASCADE, null=True, related_name='univer_chairs')
     head_of_dep = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, related_name='chairs_hod')
-    teacher = models.ManyToManyField(User)
+    # teacher = models.ManyToManyField(User)
 
     def __str__(self):
         return '{0}. Заведующая кафедрой - {1} {2} {3}'.format(self.name, self.head_of_dep.first_name, self.head_of_dep.middle_name, self.head_of_dep.last_name)
